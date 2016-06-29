@@ -22,6 +22,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -29,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private long lastUpdate = 0;
-    private float[] gravity = new float[3];
-    private float[] linearAcceleration = new float[3];
+    private double[] gravity = new double[3];
+    private double[] linearAcceleration = new double[3];
     private List<Results> mListResults = new ArrayList<>();
     private Results tempResults = new Results();
     private Switch switch1;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private ProgressBar progressBar;
     private Button initialize;
     private ImageView imageView;
+    private JSONSerializer mSerializer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void record(){
+
         mSensorManager.registerListener(MainActivity.this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         mListResults.clear();
         Handler recordHandler = new Handler();
@@ -149,12 +153,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
             double mAlpha = 0.8;
-            float alpha = (float) mAlpha;
 
             // Isolate the force of gravity with the low-pass filter.
-            gravity[0] = alpha * gravity[0] + (1 - alpha) * event.values[0];
-            gravity[1] = alpha * gravity[1] + (1 - alpha) * event.values[1];
-            gravity[2] = alpha * gravity[2] + (1 - alpha) * event.values[2];
+            gravity[0] = mAlpha * gravity[0] + (1 - mAlpha) * event.values[0];
+            gravity[1] = mAlpha * gravity[1] + (1 - mAlpha) * event.values[1];
+            gravity[2] = mAlpha * gravity[2] + (1 - mAlpha) * event.values[2];
 
             // Remove the gravity contribution with the high-pass filter.
             linearAcceleration[0] = event.values[0] - gravity[0];
@@ -188,12 +191,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    public void saveNotes(){
+        mSerializer = new JSONSerializer("MotionSensor.json", MainActivity.this.getApplicationContext());
+        try{
+            mSerializer.save(mListResults);
+        }catch(Exception e){
+            Log.e("Error Saving Notes","", e);
+        }
+    }
+
     @Override
     protected void onPause()
     {
         // unregister the sensor
         mSensorManager.unregisterListener(this, mSensor);
         super.onPause();
+        saveNotes();
     }
 
     @Override
