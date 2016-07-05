@@ -63,6 +63,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textView2.setText("No Record");
         progressBar.setProgress(0);
 
+        mSerializer = new JSONSerializer("MotionSensor.json", MainActivity.this.getApplicationContext());
+        try {
+            mListResults = mSerializer.load();
+        } catch (Exception e){
+            Log.e("Error loading notes: ", "", e);
+        }
+
         if (mListResults.isEmpty()) {
             imageView.setColorFilter(Color.argb(255, 230, 230, 230));
             initialize.setClickable(false);
@@ -126,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void record(){
 
         mSensorManager.registerListener(MainActivity.this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        mListResults.clear();
         Handler recordHandler = new Handler();
         recordHandler.postDelayed(new Runnable() {
             @Override

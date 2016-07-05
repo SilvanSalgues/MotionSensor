@@ -12,4 +12,11 @@
     tools:context="org.salguesmines_ales.silvan.motionsensor.DisplayResults"
     tools:showIn="@layout/activity_display_results">
 
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
