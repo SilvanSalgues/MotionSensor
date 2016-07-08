@@ -21,22 +21,17 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONException;
-
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private long lastUpdate = 0;
     private double[] gravity = new double[3];
     private double[] linearAcceleration = new double[3];
     private List<Results> mListResults = new ArrayList<>();
     private Results tempResults = new Results();
     private Switch switch1;
-    private long curTime = 0;
     private TextView textView;
     private TextView textView2;
     private ProgressBar progressBar;
@@ -111,8 +106,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i <= 100; i++) {
+                for (int i = 0; i <= 50; i++) {
                     final int value = i;
+                    progressBar.setMax(50);
                     progressBar.post(new Runnable() {
                         @Override
                         public void run() {
@@ -146,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 initialize.setVisibility(View.VISIBLE);
                 imageView.setColorFilter(Color.argb(255, 255, 64, 129));
             }
-        }, 10000);
+        }, 5000);
     }
 
     @Override
@@ -154,11 +150,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event)
-    {
+    public void onSensorChanged(SensorEvent event) {
+        long curTime;
         if (mSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
             double mAlpha = 0.8;
+            tempResults = new Results();
 
             // Isolate the force of gravity with the low-pass filter.
             gravity[0] = mAlpha * gravity[0] + (1 - mAlpha) * event.values[0];
@@ -170,20 +167,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             linearAcceleration[1] = event.values[1] - gravity[1];
             linearAcceleration[2] = event.values[2] - gravity[2];
 
-            lastUpdate = curTime - lastUpdate;
             curTime = System.currentTimeMillis();
 
-            tempResults.setmTime(lastUpdate);
+            tempResults.setmTime(curTime);
             tempResults.setmLinearAccelerationX(linearAcceleration[0]);
             tempResults.setmLinearAccelerationY(linearAcceleration[1]);
             tempResults.setmLinearAccelerationZ(linearAcceleration[2]);
+
             mListResults.add(tempResults);
 
-            lastUpdate = curTime;
+            /*System.out.println(mListResults);*/
 
-            /*Log.e("results ", "X = " + Float.toString(linearAcceleration[0]) + "  "
-                    + "Y = " + Float.toString(linearAcceleration[1])+ "  "
-                    + "Z = " + Float.toString(linearAcceleration[2]));*/
+            Log.e("results ", "X = " + Double.toString(tempResults.getmLinearAccelerationX()) + "  "
+                    + "Y = " + Double.toString(tempResults.getmLinearAccelerationY()) + "  "
+                    + "Z = " + Double.toString(tempResults.getmLinearAccelerationZ()) + "  "
+                    + "T = " + Long.toString(tempResults.getmTime()));
         }
     }
 
@@ -191,13 +189,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mListResults.isEmpty()){
             Toast.makeText(MainActivity.this, "No data recorded", Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(MainActivity.this, "Make something soon", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, DisplayResults.class);
-            startActivity(intent);
+            //Toast.makeText(MainActivity.this, "Make something soon", Toast.LENGTH_SHORT).show();
+            Intent displayIntent = new Intent(this, DisplayResults.class);
+            startActivity(displayIntent);
         }
     }
 
-    public void saveNotes(){
+    public void saveResults(){
         mSerializer = new JSONSerializer("MotionSensor.json", MainActivity.this.getApplicationContext());
         try{
             mSerializer.save(mListResults);
@@ -212,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // unregister the sensor
         mSensorManager.unregisterListener(this, mSensor);
         super.onPause();
-        saveNotes();
+        saveResults();
     }
 
     @Override
@@ -236,7 +234,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_RealTimeRecord) {
+            Intent rtRecordIntent = new Intent(this, DisplayResults.class);
+            startActivity(rtRecordIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);

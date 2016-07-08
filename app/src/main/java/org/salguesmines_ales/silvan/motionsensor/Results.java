@@ -8,7 +8,8 @@ import org.json.JSONObject;
  */
 public class Results {
 
-    private double mTime, mLinearAccelerationX, mLinearAccelerationY, mLinearAccelerationZ;
+    private double mLinearAccelerationX, mLinearAccelerationY, mLinearAccelerationZ;
+    private Long mTime;
 
     // JSON
     private static final String JSON_TIME = "mTime";
@@ -18,7 +19,7 @@ public class Results {
 
     //JSON default constructor
     public Results(JSONObject jo) throws JSONException{
-        mTime = jo.getDouble(JSON_TIME);
+        mTime = jo.getLong(JSON_TIME);
         mLinearAccelerationX = jo.getDouble(JSON_LINEAR_ACC_X);
         mLinearAccelerationY = jo.getDouble(JSON_LINEAR_ACC_Y);
         mLinearAccelerationZ = jo.getDouble(JSON_LINEAR_ACC_Z);
@@ -39,18 +40,18 @@ public class Results {
         return jo;
     }
 
-    public void Results(double time, double accelX, double accelY, double accelZ){
+    public void Results(Long time, double accelX, double accelY, double accelZ){
         mTime=time;
         mLinearAccelerationX = accelX;
         mLinearAccelerationY = accelY;
         mLinearAccelerationZ = accelZ;
     }
 
-    public double getmTime() {
+    public Long getmTime() {
         return mTime;
     }
 
-    public void setmTime(double mTime) {
+    public void setmTime(Long mTime) {
         this.mTime = mTime;
     }
 

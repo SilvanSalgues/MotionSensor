@@ -30,11 +30,11 @@ public class JSONSerializer {
         mContexte = con;
     }
 
-    public void save(List<Results> results) throws IOException, JSONException{
+    public void save(List<Results> listResults) throws IOException, JSONException{
 
         JSONArray jArray = new JSONArray();
 
-        for (Results res : results)
+        for (Results res : listResults)
 
             jArray.put(res.convertToJSON());
             Writer writer = null;
@@ -53,7 +53,7 @@ public class JSONSerializer {
 
     public ArrayList<Results> load() throws IOException,JSONException{
 
-        ArrayList<Results> results = new ArrayList<Results>();
+        ArrayList<Results> listResults = new ArrayList<Results>();
         BufferedReader reader = null;
 
         try {
@@ -69,7 +69,7 @@ public class JSONSerializer {
             JSONArray jArray = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
 
             for (int i = 0; i < jArray.length(); i++) {
-                results.add(new Results(jArray.getJSONObject(i)));
+                listResults.add(new Results(jArray.getJSONObject(i)));
             }
         } catch (FileNotFoundException e){
 
@@ -78,6 +78,6 @@ public class JSONSerializer {
                 reader.close();
             }
         }
-        return results;
+        return listResults;
     }
 }
