@@ -176,12 +176,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             mListResults.add(tempResults);
 
-            /*System.out.println(mListResults);*/
-
-            Log.e("results ", "X = " + Double.toString(tempResults.getmLinearAccelerationX()) + "  "
+            /*Log.e("results ", "X = " + Double.toString(tempResults.getmLinearAccelerationX()) + "  "
                     + "Y = " + Double.toString(tempResults.getmLinearAccelerationY()) + "  "
                     + "Z = " + Double.toString(tempResults.getmLinearAccelerationZ()) + "  "
-                    + "T = " + Long.toString(tempResults.getmTime()));
+                    + "T = " + Long.toString(tempResults.getmTime()));*/
         }
     }
 

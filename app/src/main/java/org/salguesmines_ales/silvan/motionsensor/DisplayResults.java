@@ -35,10 +35,6 @@ public class DisplayResults extends AppCompatActivity {
     private static Context mContext;
     private ErrorStatus status;
 
-    /*private ArrayList<Double> xVal = new ArrayList<>();
-    private ArrayList<Double> yVal = new ArrayList<>();
-    private ArrayList<Double> zVal = new ArrayList<>();*/
-
     public static final int MSG_ERR = 0, MSG_CNF = 1, MSG_IND = 2;
 
     public static final String TAG = "ProgressBarActivity";
@@ -111,10 +107,6 @@ public class DisplayResults extends AppCompatActivity {
 
         for (int i = 0; i <= iteration; i++){
             mResults = mListResults.get(i);
-            /*xVal.add(mResults.getmLinearAccelerationX());
-            yVal.add(mResults.getmLinearAccelerationY());
-            zVal.add(mResults.getmLinearAccelerationZ());*/
-
             Float tempX = (float) mResults.getmLinearAccelerationX();
             Float tempY = (float) mResults.getmLinearAccelerationY();
             Float tempZ = (float) mResults.getmLinearAccelerationZ();
