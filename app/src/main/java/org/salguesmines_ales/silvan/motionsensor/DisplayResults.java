@@ -28,6 +28,7 @@ public class DisplayResults extends AppCompatActivity {
     private JSONSerializer mSerializer;
     private LineChart mLineChart;
     private int iteration;
+    private long initTime;
     private ArrayList<Entry> xVal = new ArrayList<>();
     private ArrayList<Entry> yVal = new ArrayList<>();
     private ArrayList<Entry> zVal = new ArrayList<>();
@@ -37,7 +38,7 @@ public class DisplayResults extends AppCompatActivity {
 
     public static final int MSG_ERR = 0, MSG_CNF = 1, MSG_IND = 2;
 
-    public static final String TAG = "ProgressBarActivity";
+    public static final String TAG = "ProgressBar";
 
     enum ErrorStatus { NO_ERROR }
 
@@ -50,13 +51,17 @@ public class DisplayResults extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = this;
+
         mSerializer = new JSONSerializer("MotionSensor.json", DisplayResults.this.getApplicationContext());
         try {
             mListResults = mSerializer.load();
         } catch (Exception e){
             Log.e("Error loading notes: ", "", e);
         }
+        
         mLineChart = (LineChart) findViewById(R.id.chart);
+        Results initResults = mListResults.get(0);
+        initTime = initResults.getmTime();
         calculation();
     }
 
@@ -101,21 +106,18 @@ public class DisplayResults extends AppCompatActivity {
     }
 
     protected ErrorStatus treatmentData() {
-
-        mResults = mListResults.get(0);
-        Float initTime = (float) mResults.getmTime();
-
         for (int i = 0; i <= iteration; i++){
             mResults = mListResults.get(i);
             Float tempX = (float) mResults.getmLinearAccelerationX();
             Float tempY = (float) mResults.getmLinearAccelerationY();
             Float tempZ = (float) mResults.getmLinearAccelerationZ();
-            Float tempT = (mResults.getmTime() - initTime);
-            Entry entryX = new Entry(i, tempX);
+            long longT = (mResults.getmTime() - initTime);
+            Float tempT = (float) longT;
+            Entry entryX = new Entry(tempT, tempX);
             xVal.add(entryX);
-            Entry entryY = new Entry(i, tempY);
+            Entry entryY = new Entry(tempT, tempY);
             yVal.add(entryY);
-            Entry entryZ = new Entry(i, tempZ);
+            Entry entryZ = new Entry(tempT, tempZ);
             zVal.add(entryZ);
         }
 
@@ -144,6 +146,7 @@ public class DisplayResults extends AppCompatActivity {
         dataSets.add(setY);
         dataSets.add(setZ);
         LineData data = new LineData(dataSets);
+        mLineChart.setDescription("motion recording");
         mLineChart.setData(data);
 
         Legend lg = mLineChart.getLegend();

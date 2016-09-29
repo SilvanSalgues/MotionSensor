@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     initialize.setClickable(true);
                     imageView.setColorFilter(Color.argb(255, 230, 230, 230));
                     progressBar.setProgress(0);
+                    textView2.setText("No Record");
                 }
             }
         });
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_RealTimeRecord) {
-            Intent rtRecordIntent = new Intent(this, DisplayResults.class);
+            Intent rtRecordIntent = new Intent(this, RealTimeRecord.class);
             startActivity(rtRecordIntent);
             return true;
         }

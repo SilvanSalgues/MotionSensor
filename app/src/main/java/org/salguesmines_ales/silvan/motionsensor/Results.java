@@ -9,7 +9,7 @@ import org.json.JSONObject;
 public class Results {
 
     private double mLinearAccelerationX, mLinearAccelerationY, mLinearAccelerationZ;
-    private Long mTime;
+    private long mTime;
 
     // JSON
     private static final String JSON_TIME = "mTime";
@@ -40,18 +40,18 @@ public class Results {
         return jo;
     }
 
-    public void Results(Long time, double accelX, double accelY, double accelZ){
+    public void Results(long time, double accelX, double accelY, double accelZ){
         mTime=time;
         mLinearAccelerationX = accelX;
         mLinearAccelerationY = accelY;
         mLinearAccelerationZ = accelZ;
     }
 
-    public Long getmTime() {
+    public long getmTime() {
         return mTime;
     }
 
-    public void setmTime(Long mTime) {
+    public void setmTime(long mTime) {
         this.mTime = mTime;
     }
 
